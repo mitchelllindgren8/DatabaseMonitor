@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             tabControl1 = new TabControl();
             View = new TabPage();
             tlpMainTable = new TableLayoutPanel();
@@ -38,6 +39,10 @@
             label2 = new Label();
             label1 = new Label();
             Settings = new TabPage();
+            panel3 = new Panel();
+            plLoadTableView = new Panel();
+            btnLoadTableView = new Button();
+            label13 = new Label();
             panel6 = new Panel();
             panel4 = new Panel();
             plConnectionStringTypeStatus = new Panel();
@@ -69,21 +74,25 @@
             tbDBpassword = new TextBox();
             rbWindowsAuth = new RadioButton();
             rbSQLAuth = new RadioButton();
-            label13 = new Label();
-            panel3 = new Panel();
-            panel5 = new Panel();
-            btnLoadTableView = new Button();
+            dgvDatabaseView = new DataGridView();
+            TableName = new DataGridViewTextBoxColumn();
+            RecordCount = new DataGridViewTextBoxColumn();
+            RecordAverage = new DataGridViewTextBoxColumn();
+            RecordDifference = new DataGridViewTextBoxColumn();
+            OldestRecord = new DataGridViewTextBoxColumn();
+            NewestRecord = new DataGridViewTextBoxColumn();
             tabControl1.SuspendLayout();
             View.SuspendLayout();
             tlpMainTable.SuspendLayout();
             Settings.SuspendLayout();
+            panel3.SuspendLayout();
             panel4.SuspendLayout();
             plBaseTableView.SuspendLayout();
             plTableCheckBoxes.SuspendLayout();
             panel2.SuspendLayout();
             panel1.SuspendLayout();
             panelSQLAuth.SuspendLayout();
-            panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvDatabaseView).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
@@ -100,6 +109,7 @@
             // View
             // 
             View.AutoScroll = true;
+            View.Controls.Add(dgvDatabaseView);
             View.Controls.Add(tlpMainTable);
             View.Location = new Point(4, 24);
             View.Name = "View";
@@ -214,6 +224,48 @@
             Settings.TabIndex = 1;
             Settings.Text = "Settings";
             Settings.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            panel3.BackColor = Color.LightGray;
+            panel3.BorderStyle = BorderStyle.Fixed3D;
+            panel3.Controls.Add(plLoadTableView);
+            panel3.Controls.Add(btnLoadTableView);
+            panel3.Location = new Point(14, 612);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(297, 33);
+            panel3.TabIndex = 21;
+            // 
+            // plLoadTableView
+            // 
+            plLoadTableView.BackColor = Color.DarkGray;
+            plLoadTableView.BorderStyle = BorderStyle.FixedSingle;
+            plLoadTableView.Location = new Point(267, 3);
+            plLoadTableView.Name = "plLoadTableView";
+            plLoadTableView.Size = new Size(23, 23);
+            plLoadTableView.TabIndex = 20;
+            // 
+            // btnLoadTableView
+            // 
+            btnLoadTableView.BackColor = SystemColors.GradientActiveCaption;
+            btnLoadTableView.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnLoadTableView.Location = new Point(117, 3);
+            btnLoadTableView.Name = "btnLoadTableView";
+            btnLoadTableView.Size = new Size(144, 23);
+            btnLoadTableView.TabIndex = 3;
+            btnLoadTableView.Text = "Load Table View";
+            btnLoadTableView.UseVisualStyleBackColor = false;
+            btnLoadTableView.Click += btnLoadTableView_Click;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label13.Location = new Point(14, 6);
+            label13.Name = "label13";
+            label13.Size = new Size(165, 17);
+            label13.TabIndex = 23;
+            label13.Text = "Database Configurations:";
             // 
             // panel6
             // 
@@ -543,47 +595,73 @@
             rbSQLAuth.UseVisualStyleBackColor = true;
             rbSQLAuth.CheckedChanged += rbSQLAuth_CheckedChanged;
             // 
-            // label13
+            // dgvDatabaseView
             // 
-            label13.AutoSize = true;
-            label13.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label13.Location = new Point(14, 6);
-            label13.Name = "label13";
-            label13.Size = new Size(165, 17);
-            label13.TabIndex = 23;
-            label13.Text = "Database Configurations:";
+            dgvDatabaseView.AllowUserToAddRows = false;
+            dgvDatabaseView.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle2.BackColor = Color.Red;
+            dgvDatabaseView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dgvDatabaseView.Anchor = AnchorStyles.None;
+            dgvDatabaseView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvDatabaseView.Columns.AddRange(new DataGridViewColumn[] { TableName, RecordCount, RecordAverage, RecordDifference, OldestRecord, NewestRecord });
+            dgvDatabaseView.Location = new Point(5, 171);
+            dgvDatabaseView.Name = "dgvDatabaseView";
+            dgvDatabaseView.Size = new Size(778, 199);
+            dgvDatabaseView.TabIndex = 1;
             // 
-            // panel3
+            // TableName
             // 
-            panel3.BackColor = Color.LightGray;
-            panel3.BorderStyle = BorderStyle.Fixed3D;
-            panel3.Controls.Add(panel5);
-            panel3.Controls.Add(btnLoadTableView);
-            panel3.Location = new Point(14, 612);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(297, 33);
-            panel3.TabIndex = 21;
+            TableName.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            TableName.Frozen = true;
+            TableName.HeaderText = "Table Name";
+            TableName.Name = "TableName";
+            TableName.ReadOnly = true;
+            TableName.Width = 95;
             // 
-            // panel5
+            // RecordCount
             // 
-            panel5.BackColor = Color.DarkGray;
-            panel5.BorderStyle = BorderStyle.FixedSingle;
-            panel5.Location = new Point(267, 3);
-            panel5.Name = "panel5";
-            panel5.Size = new Size(23, 23);
-            panel5.TabIndex = 20;
+            RecordCount.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            RecordCount.Frozen = true;
+            RecordCount.HeaderText = "Record Count";
+            RecordCount.Name = "RecordCount";
+            RecordCount.ReadOnly = true;
+            RecordCount.Width = 105;
             // 
-            // btnLoadTableView
+            // RecordAverage
             // 
-            btnLoadTableView.BackColor = SystemColors.GradientActiveCaption;
-            btnLoadTableView.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnLoadTableView.Location = new Point(117, 3);
-            btnLoadTableView.Name = "btnLoadTableView";
-            btnLoadTableView.Size = new Size(144, 23);
-            btnLoadTableView.TabIndex = 3;
-            btnLoadTableView.Text = "Load Table View";
-            btnLoadTableView.UseVisualStyleBackColor = false;
-            btnLoadTableView.Click += btnLoadTableView_Click;
+            RecordAverage.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            RecordAverage.Frozen = true;
+            RecordAverage.HeaderText = "Record Average";
+            RecordAverage.Name = "RecordAverage";
+            RecordAverage.ReadOnly = true;
+            RecordAverage.Width = 106;
+            // 
+            // RecordDifference
+            // 
+            RecordDifference.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            RecordDifference.Frozen = true;
+            RecordDifference.HeaderText = "Record Difference";
+            RecordDifference.Name = "RecordDifference";
+            RecordDifference.ReadOnly = true;
+            RecordDifference.Width = 115;
+            // 
+            // OldestRecord
+            // 
+            OldestRecord.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            OldestRecord.Frozen = true;
+            OldestRecord.HeaderText = "Oldest Record";
+            OldestRecord.Name = "OldestRecord";
+            OldestRecord.ReadOnly = true;
+            OldestRecord.Width = 97;
+            // 
+            // NewestRecord
+            // 
+            NewestRecord.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            NewestRecord.Frozen = true;
+            NewestRecord.HeaderText = "Newest Record";
+            NewestRecord.Name = "NewestRecord";
+            NewestRecord.ReadOnly = true;
+            NewestRecord.Width = 102;
             // 
             // Dashboard
             // 
@@ -599,6 +677,7 @@
             tlpMainTable.PerformLayout();
             Settings.ResumeLayout(false);
             Settings.PerformLayout();
+            panel3.ResumeLayout(false);
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
             plBaseTableView.ResumeLayout(false);
@@ -609,7 +688,7 @@
             panel1.PerformLayout();
             panelSQLAuth.ResumeLayout(false);
             panelSQLAuth.PerformLayout();
-            panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvDatabaseView).EndInit();
             ResumeLayout(false);
         }
 
@@ -658,7 +737,14 @@
         private Panel panel6;
         private Label label13;
         private Panel panel3;
-        private Panel panel5;
+        private Panel plLoadTableView;
         private Button btnLoadTableView;
+        private DataGridView dgvDatabaseView;
+        private DataGridViewTextBoxColumn TableName;
+        private DataGridViewTextBoxColumn RecordCount;
+        private DataGridViewTextBoxColumn RecordAverage;
+        private DataGridViewTextBoxColumn RecordDifference;
+        private DataGridViewTextBoxColumn OldestRecord;
+        private DataGridViewTextBoxColumn NewestRecord;
     }
 }

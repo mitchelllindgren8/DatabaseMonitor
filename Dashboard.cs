@@ -14,26 +14,6 @@ namespace LiveStats
         public Dashboard()
         {
             InitializeComponent();
-
-            CollectDatabaseContent();
-
-            InitializeTableContent();
-        }
-
-        public void CollectDatabaseContent()
-        {
-            // Get ConnectionString needed for database.
-
-            // Access database.
-
-            // List tables.
-
-
-        }
-
-        private void InitializeTableContent()
-        {
-            // 
         }
 
         #region UI Element Events
@@ -48,13 +28,13 @@ namespace LiveStats
 
             if (rbWindowsAuth.Checked)
             {
-                cbInstances.Items.AddRange(DashboardHelper.GetInstances().ToArray() ?? Array.Empty<string>());
+                cbInstances.Items.AddRange(DashboardHelper.RetrieveInstances());
             }
 
             // TODO: Add code for SQL server credentials authentication.
             if (rbSQLAuth.Checked)
             {
-                cbInstances.Items.AddRange(DashboardHelper.GetInstances().ToArray() ?? Array.Empty<string>());
+                cbInstances.Items.AddRange(DashboardHelper.RetrieveInstances());
             }
 
             if (cbInstances.Items.Count > 0)
@@ -74,15 +54,26 @@ namespace LiveStats
             plDatabaseStatus.BackColor = Color.DarkGray;
             Thread.Sleep(500);
 
-            //dashboardValues.BuildConnectionString(serverName, instanceName, string.Empty);
-            ManageConnectionString(serverName, instanceName, string.Empty);
-
-            cbDatabases.Items.AddRange(DashboardHelper.GetDatabases(_dashboardValues.ConnectionString).ToArray() ?? Array.Empty<string>());
-
-            if (cbDatabases.Items.Count > 0)
-                plDatabaseStatus.BackColor = Color.Green;
+            // Ensure we have an 'instanceName' value before loading any database tables.
+            if (!string.IsNullOrEmpty(instanceName))
+            {
+                ManageConnectionString(serverName, instanceName, string.Empty);
+                cbDatabases.Items.AddRange(DashboardHelper.GetDatabases(_dashboardValues.ConnectionString));
+            }
             else
+            {
                 plDatabaseStatus.BackColor = Color.Red;
+            }
+
+            // Update UI elements.
+            if (cbDatabases.Items.Count > 0)
+            {
+                plDatabaseStatus.BackColor = Color.Green;
+            }
+            else
+            {
+                plDatabaseStatus.BackColor = Color.Red;
+            }
         }
 
         /// <summary>
@@ -97,10 +88,18 @@ namespace LiveStats
             plTableStatus.BackColor = Color.DarkGray;
             plTableStatus.Refresh();
 
-            ManageConnectionString(serverName, instanceName, databaseName);
+            // Ensure we have a databaseName' value before loading any database tables. (Note: An empty database string will load the first database within SSMS.)
+            if (!string.IsNullOrEmpty(databaseName))
+            {
+                ManageConnectionString(serverName, instanceName, databaseName);
+                _dashboardPanel = DashboardHelper.BuildTablePanel(_dashboardValues.ConnectionString);
+            }
+            else
+            {
+                plTableStatus.BackColor = Color.Red;
+            }
 
-            _dashboardPanel = DashboardHelper.BuildTablePanel(_dashboardValues.ConnectionString);
-
+            // Update UI elements.
             if (_dashboardPanel.checkboxTablePanel.Tag != null && (bool)_dashboardPanel.checkboxTablePanel.Tag)
             {
                 plTableStatus.BackColor = Color.Green;
@@ -123,9 +122,13 @@ namespace LiveStats
             string connectionString = tbConnectionString.Text;
 
             if (DashboardHelper.TestDatabaseConnection(connectionString))
+            {
                 plConnectionStringStatus.BackColor = Color.Green;
+            }
             else
+            {
                 plConnectionStringStatus.BackColor = Color.Red;
+            }
         }
 
         /// <summary>
@@ -205,16 +208,22 @@ namespace LiveStats
 
         private void btnLoadTableView_Click(object sender, EventArgs e)
         {
-            DashboardHelper.GenerateTableView(_dashboardPanel);
+            string connectionString = tbConnectionString.Text;
+            DataSet databaseDataSet = DashboardHelper.GenerateTableView(_dashboardPanel, connectionString);
 
-            // Create a List of Tables instances.
+            if (databaseDataSet.Tables.Count > 0)
+            {
+                plLoadTableView.BackColor = Color.Green;
+                dgvDatabaseView.DataSource = databaseDataSet.Tables;
 
-            // Loop through the generated panel's list of tableNames and call the storedprocedure
+                // Create Stored-Procedure
 
-            // Create a table and fulfil the properties using the result_table's values.
-
-            // Add result_table to tables
-
+                // Solve how to set results from SP into a usable data. Create row-by-row, set UI DataSource equal to DataSet obj, 
+            }
+            else
+            {
+                plLoadTableView.BackColor = Color.Red;
+            }
 
         }
     }
